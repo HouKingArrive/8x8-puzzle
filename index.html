@@ -55,9 +55,9 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: start;
             width: 100%;
-            min-height: 100vh;
+            max-height: 100vh;
             padding: 20px;
         }
 
@@ -112,14 +112,103 @@
         }
 
         /* Game Screen */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            display: none;
+        }
+
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .right-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+
+        .mobile-header {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+        }
+
+        .mobile-header .game-title {
+            order: 1;
+        }
+
+        .mobile-header .restart-btn-small {
+            order: 2;
+        }
+
+        .mobile-header .score-box {
+            order: 3;
+        }
+
+        .mobile-scores {
+            display: flex;
+            gap: 30px;
+        }
+
+        .mobile-scores .score-box {
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-header {
+                display: none;
+            }
+            .game-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .left-panel, .right-panel {
+                display: flex;
+            }
+
+            .center-panel {
+                order: 2;
+            }
+
+            .left-panel {
+                order: 1;
+            }
+
+            .right-panel {
+                order: 3;
+            }
+        }
+
         .header {
             width: 100%;
             max-width: 500px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            margin-bottom: 10px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
         }
 
         .score-box {
@@ -127,7 +216,7 @@
         }
 
         .score-label {
-            font-size: 0.75rem;
+            font-size: 1.5rem;
             color: #888;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -135,17 +224,55 @@
 
         .score-value {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--accent-cyan);
         }
 
         .game-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--accent-cyan);
             text-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .header-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .restart-btn-small {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            padding: 4px 12px;
+            border: 1px solid #555;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .restart-btn-small:hover {
+            border-color: #FF5555;
+            color: #FF5555;
+        }
+
+        #restart-btn-desktop {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            #restart-btn {
+                display: none;
+            }
+            #restart-btn-desktop {
+                display: block;
+            }
         }
 
         .board-container {
@@ -398,8 +525,8 @@
         }
 
         .drag-cell {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 4px;
             border: 2px solid rgba(255, 255, 255, 0.4);
         }
@@ -442,9 +569,17 @@
 
         /* Responsive */
         @media (max-width: 767px) {
+            .left-panel, .right-panel {
+                display: none !important;
+            }
+
+            .game-container {
+                flex-direction: column;
+            }
+
             .cell {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
             }
 
             .board-container {
@@ -452,8 +587,8 @@
             }
 
             .piece-preview {
-                width: 85px;
-                height: 85px;
+                width: 90px;
+                height: 90px;
             }
 
             .piece-area {
@@ -461,7 +596,7 @@
             }
 
             .header {
-                padding: 10px 15px;
+                padding: 8px 10px;
             }
 
             .game-title {
@@ -469,7 +604,7 @@
             }
 
             .score-value {
-                font-size: 1.2rem;
+                font-size: 2.2rem;
             }
 
             .drag-cell {
@@ -480,18 +615,18 @@
 
         @media (max-width: 400px) {
             .cell {
-                width: 32px;
-                height: 32px;
+                width: 36px;
+                height: 36px;
             }
 
             .piece-preview {
-                width: 75px;
-                height: 75px;
+                width: 80px;
+                height: 80px;
             }
 
             .drag-cell {
-                width: 25px;
-                height: 25px;
+                width: 28px;
+                height: 28px;
             }
         }
 
@@ -515,26 +650,43 @@
 
     <!-- Game Screen -->
     <div id="game-screen" class="screen">
-        <div class="header">
-            <div class="score-box">
-                <div class="score-label">分數</div>
-                <div class="score-value" id="score">0</div>
-            </div>
+        <!-- Mobile Header -->
+        <div class="mobile-header">
             <div class="game-title">8x8 PUZZLE</div>
-            <div class="score-box">
-                <div class="score-label">最高分</div>
-                <div class="score-value" id="best-score">0</div>
+            <button class="restart-btn-small" id="restart-btn">重新開始</button>
+            <div class="mobile-scores">
+                <div class="score-box">
+                    <div class="score-label">分數</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">最高分</div>
+                    <div class="score-value" id="best-score">0</div>
+                </div>
             </div>
         </div>
 
-        <div class="board-container">
-            <div class="board" id="board"></div>
-        </div>
-
-        <div class="piece-area" id="piece-area"></div>
-
-        <div class="controls">
-            <button class="restart-btn" id="restart-btn">重新開始</button>
+        <div class="game-container">
+            <div class="left-panel">
+                <div class="score-box">
+                    <div class="score-label">分數</div>
+                    <div class="score-value" id="score-desktop">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">最高分</div>
+                    <div class="score-value" id="best-score-desktop">0</div>
+                </div>
+                <button class="restart-btn-small" id="restart-btn-desktop">重新開始</button>
+            </div>
+            <div class="center-panel">
+                <div class="board-container">
+                    <div class="board" id="board"></div>
+                </div>
+                <div class="piece-area" id="piece-area"></div>
+            </div>
+            <div class="right-panel">
+                <div class="game-title">8x8 PUZZLE</div>
+            </div>
         </div>
     </div>
 
@@ -912,11 +1064,17 @@
 
         function updateScore() {
             document.getElementById('score').textContent = score;
+            if (document.getElementById('score-desktop')) {
+                document.getElementById('score-desktop').textContent = score;
+            }
             if (score > bestScore) {
                 bestScore = score;
                 localStorage.setItem('bestScore', bestScore);
             }
             document.getElementById('best-score').textContent = bestScore;
+            if (document.getElementById('best-score-desktop')) {
+                document.getElementById('best-score-desktop').textContent = bestScore;
+            }
         }
 
         function saveGame() {
@@ -1035,7 +1193,7 @@
             const blocks = piece.blocks;
             const rows = blocks.length;
             const cols = blocks[0].length;
-            const cellSize = 35;
+            const cellSize = 40;
             
             dragEl.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
             dragEl.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
@@ -1247,6 +1405,7 @@
 
         document.getElementById('start-btn').addEventListener('click', startGame);
         document.getElementById('restart-btn').addEventListener('click', restartGame);
+        document.getElementById('restart-btn-desktop').addEventListener('click', restartGame);
         document.getElementById('replay-btn').addEventListener('click', restartGame);
 
         document.getElementById('best-score').textContent = bestScore;
