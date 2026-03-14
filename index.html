@@ -394,7 +394,6 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 2px;
-            transform: translate(-50%, -50%) scale(0.8);
             opacity: 0.9;
         }
 
@@ -573,6 +572,8 @@
         let dragPieceIndex = -1;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
+        let lastDragX = 0;
+        let lastDragY = 0;
 
         function initBoard() {
             board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null));
@@ -1013,7 +1014,12 @@
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            showDragPiece(piece, clientX, clientY);
+            dragOffsetX = 0;
+            dragOffsetY = 0;
+            lastDragX = clientX;
+            lastDragY = clientY;
+            
+            showDragPiece(piece, clientX - 50, clientY - 150);
             
             document.addEventListener('mousemove', onDrag);
             document.addEventListener('touchmove', onDrag, { passive: false });
@@ -1049,10 +1055,8 @@
                 }
             }
             
-            const offsetX = Math.floor(cols / 2) * cellSize;
-            const offsetY = Math.floor(rows / 2) * cellSize;
-            dragEl.style.left = (x - offsetX) + 'px';
-            dragEl.style.top = (y - offsetY) + 'px';
+            dragEl.style.left = x + 'px';
+            dragEl.style.top = y + 'px';
         }
 
         function onDrag(e) {
@@ -1062,27 +1066,30 @@
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
+            const deltaX = clientX - lastDragX;
+            const deltaY = clientY - lastDragY;
+            
+            const dragEl = document.getElementById('drag-piece');
+            const currentLeft = parseFloat(dragEl.style.left) || 0;
+            const currentTop = parseFloat(dragEl.style.top) || 0;
+            
+            dragEl.style.left = (currentLeft + deltaX) + 'px';
+            dragEl.style.top = (currentTop + deltaY) + 'px';
+            
+            lastDragX = clientX;
+            lastDragY = clientY;
+            
             const piece = pieces[dragPieceIndex];
             const blocks = piece.blocks;
             const rows = blocks.length;
             const cols = blocks[0].length;
             
-            const cellSize = 35;
-            const offsetX = Math.floor(cols / 2) * cellSize;
-            const offsetY = Math.floor(rows / 2) * cellSize;
-            
-            const adjustedX = clientX - offsetX;
-            const adjustedY = clientY - offsetY;
-            
-            const dragEl = document.getElementById('drag-piece');
-            dragEl.style.left = (clientX - offsetX) + 'px';
-            dragEl.style.top = (clientY - offsetY) + 'px';
-            
-            const cell = getBoardCellFromPoint(clientX, clientY);
+            const cellSize = 15;
+            const cell = getBoardCellFromPoint(newX + 15, newY + 15);
             
             if (cell) {
-                const targetRow = cell.row - Math.floor(rows / 2);
-                const targetCol = cell.col - Math.floor(cols / 2);
+                const targetRow = cell.row;
+                const targetCol = cell.col;
                 
                 if (canPlace(piece, targetRow, targetCol)) {
                     highlightCells(piece, targetRow, targetCol, true);
@@ -1102,20 +1109,21 @@
             document.removeEventListener('mouseup', endDrag);
             document.removeEventListener('touchend', endDrag);
             
-            const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-            const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+            const dragEl = document.getElementById('drag-piece');
+            const dropX = parseFloat(dragEl.style.left);
+            const dropY = parseFloat(dragEl.style.top);
             
             const piece = pieces[dragPieceIndex];
             const blocks = piece.blocks;
             const rows = blocks.length;
             const cols = blocks[0].length;
             
-            const cell = getBoardCellFromPoint(clientX, clientY);
+            const cell = getBoardCellFromPoint(dropX + 15, dropY + 15);
             
             let placed = false;
             if (cell) {
-                const targetRow = cell.row - Math.floor(rows / 2);
-                const targetCol = cell.col - Math.floor(cols / 2);
+                const targetRow = cell.row;
+                const targetCol = cell.col;
                 
                 if (canPlace(piece, targetRow, targetCol)) {
                     placePiece(piece, targetRow, targetCol);
@@ -1239,7 +1247,7 @@
 
         document.getElementById('start-btn').addEventListener('click', startGame);
         document.getElementById('restart-btn').addEventListener('click', restartGame);
-        document.getElementById('replay-btn').addEventListener('click', startGame);
+        document.getElementById('replay-btn').addEventListener('click', restartGame);
 
         document.getElementById('best-score').textContent = bestScore;
 
